@@ -160,29 +160,31 @@ const CustomerDashboard = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Featured Restaurants</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {featuredRestaurants.slice(0, 3).map((restaurant) => (
-                <Card key={restaurant.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <CardContent className="p-4">
-                    <div className="text-4xl text-center mb-3">{restaurant.image}</div>
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-lg">{restaurant.name}</h3>
-                      <Button variant="ghost" size="sm" className="p-1">
-                        <Heart className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-3">{restaurant.cuisine}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                        <span>{restaurant.rating}</span>
+                <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardContent className="p-4">
+                      <div className="text-4xl text-center mb-3">{restaurant.image}</div>
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-semibold text-lg">{restaurant.name}</h3>
+                        <Button variant="ghost" size="sm" className="p-1">
+                          <Heart className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>{restaurant.deliveryTime}</span>
+                      <p className="text-gray-600 text-sm mb-3">{restaurant.cuisine}</p>
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center">
+                          <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                          <span>{restaurant.rating}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="h-4 w-4 mr-1" />
+                          <span>{restaurant.deliveryTime}</span>
+                        </div>
+                        <Badge variant="secondary">${restaurant.deliveryFee} fee</Badge>
                       </div>
-                      <Badge variant="secondary">${restaurant.deliveryFee} fee</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
@@ -195,34 +197,36 @@ const CustomerDashboard = () => {
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRestaurants.map((restaurant) => (
-              <Card key={restaurant.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="text-3xl">{restaurant.image}</div>
-                    <Button variant="ghost" size="sm" className="p-1">
-                      <Heart className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <h3 className="font-semibold text-lg mb-1">{restaurant.name}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{restaurant.cuisine}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                      <span>{restaurant.rating}</span>
+              <Link key={restaurant.id} to={`/restaurant/${restaurant.id}`}>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="text-3xl">{restaurant.image}</div>
+                      <Button variant="ghost" size="sm" className="p-1">
+                        <Heart className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span>{restaurant.deliveryTime}</span>
+                    <h3 className="font-semibold text-lg mb-1">{restaurant.name}</h3>
+                    <p className="text-gray-600 text-sm mb-3">{restaurant.cuisine}</p>
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                        <span>{restaurant.rating}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span>{restaurant.deliveryTime}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <Badge variant="secondary">${restaurant.deliveryFee} delivery</Badge>
-                    {restaurant.featured && (
-                      <Badge className="bg-orange-500">Featured</Badge>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                    <div className="flex justify-between items-center">
+                      <Badge variant="secondary">${restaurant.deliveryFee} delivery</Badge>
+                      {restaurant.featured && (
+                        <Badge className="bg-orange-500">Featured</Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
