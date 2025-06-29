@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,6 +20,17 @@ import {
   Bell
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import AddItemForm from '@/components/AddItemForm';
+
+interface MenuItem {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  status: string;
+  image: string;
+  description?: string;
+}
 
 const SellerDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -60,7 +70,7 @@ const SellerDashboard = () => {
     }
   ];
 
-  const menuItems = [
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([
     {
       id: 1,
       name: 'Margherita Pizza',
@@ -93,7 +103,11 @@ const SellerDashboard = () => {
       status: 'inactive',
       image: '🍞'
     }
-  ];
+  ]);
+
+  const handleAddItem = (newItem: MenuItem) => {
+    setMenuItems(prev => [...prev, newItem]);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -287,10 +301,7 @@ const SellerDashboard = () => {
           <TabsContent value="menu" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Menu Management</h2>
-              <Button className="bg-orange-500 hover:bg-orange-600">
-                <Plus className="h-4 w-4 mr-2" />
-                Add New Item
-              </Button>
+              <AddItemForm onAddItem={handleAddItem} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
