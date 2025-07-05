@@ -1,7 +1,10 @@
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import DietaryPreferences from './DietaryPreferences';
+import SmartReordering, { PreviousOrder } from './SmartReordering';
 
 interface SearchAndCategoriesProps {
   searchQuery: string;
@@ -9,6 +12,9 @@ interface SearchAndCategoriesProps {
   activeCategory: string;
   setActiveCategory: (category: string) => void;
   categories: string[];
+  selectedDietaryPreferences: string[];
+  onDietaryPreferencesChange: (preferences: string[]) => void;
+  onReorder: (order: PreviousOrder) => void;
 }
 
 const SearchAndCategories = ({
@@ -16,20 +22,35 @@ const SearchAndCategories = ({
   setSearchQuery,
   activeCategory,
   setActiveCategory,
-  categories
+  categories,
+  selectedDietaryPreferences,
+  onDietaryPreferencesChange,
+  onReorder
 }: SearchAndCategoriesProps) => {
+  const [isDietaryFilterOpen, setIsDietaryFilterOpen] = useState(false);
   return (
     <>
-      {/* Search Bar */}
+      {/* Smart Reordering */}
+      <SmartReordering onReorder={onReorder} />
+
+      {/* Search Bar & Dietary Filters */}
       <div className="mb-8">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-          <Input
-            type="text"
-            placeholder="Search restaurants or cuisines..."
-            className="pl-10 pr-4 py-2 w-full"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+        <div className="flex items-center space-x-4">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Search restaurants or cuisines..."
+              className="pl-10 pr-4 py-2 w-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <DietaryPreferences
+            selectedPreferences={selectedDietaryPreferences}
+            onPreferencesChange={onDietaryPreferencesChange}
+            isOpen={isDietaryFilterOpen}
+            onToggle={() => setIsDietaryFilterOpen(!isDietaryFilterOpen)}
           />
         </div>
       </div>

@@ -4,13 +4,44 @@ import { useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ChefHat, ArrowLeft, Star, Clock, MapPin, ShoppingCart, User, LogOut, Plus, Minus } from 'lucide-react';
+import { ChefHat, ArrowLeft, Star, Clock, MapPin, ShoppingCart, User, LogOut, Plus, Minus, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import SmartReordering, { PreviousOrder } from '@/components/SmartReordering';
+import { MenuItem, NutritionalInfo } from '@/types/menu';
+import { dietaryOptions } from '@/components/DietaryPreferences';
 
 const RestaurantDetails = () => {
   const { id } = useParams();
   const { toast } = useToast();
   const [cartItems, setCartItems] = useState<{ [key: number]: number }>({});
+  const [showNutrition, setShowNutrition] = useState<{ [key: number]: boolean }>({});
+
+  const handleReorder = (order: PreviousOrder) => {
+    // Add all items from the previous order to cart
+    order.items.forEach(item => {
+      setCartItems(prev => ({
+        ...prev,
+        [item.id]: (prev[item.id] || 0) + item.quantity
+      }));
+    });
+    
+    toast({
+      title: "Order Reordered Successfully",
+      description: `${order.items.length} items from your previous order have been added to your cart.`,
+    });
+  };
+
+  const toggleNutritionInfo = (itemId: number) => {
+    setShowNutrition(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  const getDietaryBadgeColor = (tag: string) => {
+    const option = dietaryOptions.find(opt => opt.id === tag);
+    return option ? option.color : 'bg-gray-500';
+  };
 
   // Mock restaurant data - in a real app, this would come from an API
   const restaurants = [
@@ -71,20 +102,112 @@ const RestaurantDetails = () => {
     }
   ];
 
-  // Mock menu items - in a real app, this would come from an API
-  const menuItems = [
-    { id: 1, restaurantId: 1, name: "Margherita Pizza", price: 12.99, image: "🍕", description: "Fresh mozzarella, tomato sauce, and basil" },
-    { id: 2, restaurantId: 1, name: "Pepperoni Pizza", price: 14.99, image: "🍕", description: "Classic pepperoni with mozzarella cheese" },
-    { id: 3, restaurantId: 1, name: "Caesar Salad", price: 8.99, image: "🥗", description: "Fresh romaine lettuce with caesar dressing" },
-    { id: 4, restaurantId: 2, name: "Classic Burger", price: 10.99, image: "🍔", description: "Beef patty with lettuce, tomato, and pickles" },
-    { id: 5, restaurantId: 2, name: "Cheese Burger", price: 11.99, image: "🍔", description: "Classic burger with melted cheese" },
-    { id: 6, restaurantId: 2, name: "French Fries", price: 4.99, image: "🍟", description: "Crispy golden fries with salt" },
-    { id: 7, restaurantId: 3, name: "Sweet & Sour Pork", price: 13.99, image: "🥡", description: "Tender pork with sweet and sour sauce" },
-    { id: 8, restaurantId: 3, name: "Fried Rice", price: 9.99, image: "🍚", description: "Wok-fried rice with vegetables and egg" },
-    { id: 9, restaurantId: 4, name: "Chicken Tacos", price: 9.99, image: "🌮", description: "Three soft tacos with grilled chicken" },
-    { id: 10, restaurantId: 4, name: "Beef Burrito", price: 11.99, image: "🌯", description: "Large burrito with seasoned beef and beans" },
-    { id: 11, restaurantId: 5, name: "Quinoa Bowl", price: 12.99, image: "🥗", description: "Nutritious quinoa with fresh vegetables" },
-    { id: 12, restaurantId: 5, name: "Green Smoothie", price: 6.99, image: "🥤", description: "Healthy smoothie with spinach and fruits" },
+  // Mock menu items with enhanced nutritional info
+  const menuItems: MenuItem[] = [
+    { 
+      id: 1, 
+      restaurantId: 1, 
+      name: "Margherita Pizza", 
+      price: 12.99, 
+      image: "🍕", 
+      description: "Fresh mozzarella, tomato sauce, and basil",
+      category: "pizza",
+      dietaryTags: ['vegetarian'],
+      nutritionalInfo: { calories: 280, protein: 12, carbs: 35, fat: 10, fiber: 2, sodium: 590 },
+      allergens: ['gluten', 'dairy'],
+      preparationTime: 15
+    },
+    { 
+      id: 2, 
+      restaurantId: 1, 
+      name: "Pepperoni Pizza", 
+      price: 14.99, 
+      image: "🍕", 
+      description: "Classic pepperoni with mozzarella cheese",
+      category: "pizza",
+      dietaryTags: [],
+      nutritionalInfo: { calories: 320, protein: 15, carbs: 35, fat: 14, fiber: 2, sodium: 720 },
+      allergens: ['gluten', 'dairy'],
+      preparationTime: 15
+    },
+    { 
+      id: 3, 
+      restaurantId: 1, 
+      name: "Caesar Salad", 
+      price: 8.99, 
+      image: "🥗", 
+      description: "Fresh romaine lettuce with caesar dressing",
+      category: "salad",
+      dietaryTags: ['vegetarian', 'low-calorie'],
+      nutritionalInfo: { calories: 150, protein: 8, carbs: 12, fat: 8, fiber: 4, sodium: 380 },
+      allergens: ['dairy'],
+      preparationTime: 5
+    },
+    { 
+      id: 4, 
+      restaurantId: 2, 
+      name: "Classic Burger", 
+      price: 10.99, 
+      image: "🍔", 
+      description: "Beef patty with lettuce, tomato, and pickles",
+      category: "burger",
+      dietaryTags: [],
+      nutritionalInfo: { calories: 450, protein: 25, carbs: 35, fat: 22, fiber: 3, sodium: 850 },
+      allergens: ['gluten'],
+      preparationTime: 12
+    },
+    { 
+      id: 5, 
+      restaurantId: 2, 
+      name: "Veggie Burger", 
+      price: 11.99, 
+      image: "🍔", 
+      description: "Plant-based patty with fresh vegetables",
+      category: "burger",
+      dietaryTags: ['vegetarian', 'vegan', 'high-protein'],
+      nutritionalInfo: { calories: 380, protein: 20, carbs: 45, fat: 12, fiber: 8, sodium: 650 },
+      allergens: ['gluten'],
+      preparationTime: 12
+    },
+    { 
+      id: 6, 
+      restaurantId: 2, 
+      name: "Sweet Potato Fries", 
+      price: 5.99, 
+      image: "🍟", 
+      description: "Crispy sweet potato fries with herbs",
+      category: "sides",
+      dietaryTags: ['vegetarian', 'vegan', 'gluten-free'],
+      nutritionalInfo: { calories: 180, protein: 3, carbs: 32, fat: 6, fiber: 4, sodium: 280 },
+      allergens: [],
+      preparationTime: 8
+    },
+    { 
+      id: 11, 
+      restaurantId: 5, 
+      name: "Quinoa Power Bowl", 
+      price: 12.99, 
+      image: "🥗", 
+      description: "Nutritious quinoa with fresh vegetables and avocado",
+      category: "bowl",
+      dietaryTags: ['vegetarian', 'vegan', 'gluten-free', 'high-protein', 'low-calorie'],
+      nutritionalInfo: { calories: 320, protein: 18, carbs: 42, fat: 8, fiber: 12, sodium: 420 },
+      allergens: [],
+      preparationTime: 10
+    },
+    { 
+      id: 12, 
+      restaurantId: 5, 
+      name: "Green Detox Smoothie", 
+      price: 6.99, 
+      image: "🥤", 
+      description: "Healthy smoothie with spinach, apple, and ginger",
+      category: "drinks",
+      dietaryTags: ['vegetarian', 'vegan', 'gluten-free', 'low-calorie'],
+      nutritionalInfo: { calories: 120, protein: 4, carbs: 28, fat: 1, fiber: 6, sodium: 45 },
+      allergens: [],
+      preparationTime: 3
+    },
   ];
 
   const restaurant = restaurants.find(r => r.id === parseInt(id || '0'));
@@ -198,6 +321,12 @@ const RestaurantDetails = () => {
           </div>
         </div>
 
+        {/* Smart Reordering for this restaurant */}
+        <SmartReordering 
+          currentRestaurantId={parseInt(id || '0')} 
+          onReorder={handleReorder} 
+        />
+
         {/* Menu Items */}
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Menu</h2>
@@ -206,8 +335,58 @@ const RestaurantDetails = () => {
               <Card key={item.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="p-4">
                   <div className="text-4xl text-center mb-3">{item.image}</div>
-                  <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-lg">{item.name}</h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleNutritionInfo(item.id)}
+                      className="p-1"
+                    >
+                      <Info className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <p className="text-gray-600 text-sm mb-3">{item.description}</p>
+                  
+                  {/* Dietary Tags */}
+                  {item.dietaryTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {item.dietaryTags.map((tag) => (
+                        <Badge 
+                          key={tag}
+                          className={`text-xs text-white ${getDietaryBadgeColor(tag)}`}
+                        >
+                          {dietaryOptions.find(opt => opt.id === tag)?.label || tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Nutritional Information */}
+                  {showNutrition[item.id] && (
+                    <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+                      <h4 className="text-sm font-medium mb-2">Nutritional Information (per serving)</h4>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div>Calories: {item.nutritionalInfo.calories}</div>
+                        <div>Protein: {item.nutritionalInfo.protein}g</div>
+                        <div>Carbs: {item.nutritionalInfo.carbs}g</div>
+                        <div>Fat: {item.nutritionalInfo.fat}g</div>
+                        {item.nutritionalInfo.fiber && <div>Fiber: {item.nutritionalInfo.fiber}g</div>}
+                        {item.nutritionalInfo.sodium && <div>Sodium: {item.nutritionalInfo.sodium}mg</div>}
+                      </div>
+                      {item.allergens.length > 0 && (
+                        <div className="mt-2 text-xs text-red-600">
+                          <strong>Allergens:</strong> {item.allergens.join(', ')}
+                        </div>
+                      )}
+                      {item.preparationTime && (
+                        <div className="mt-1 text-xs text-gray-500">
+                          Prep time: {item.preparationTime} min
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between">
                     <span className="text-xl font-bold text-orange-500">${item.price}</span>
                     <div className="flex items-center space-x-2">

@@ -3,14 +3,19 @@ import { useState } from 'react';
 import CustomerHeader from '@/components/CustomerHeader';
 import SearchAndCategories from '@/components/SearchAndCategories';
 import RestaurantGrid from '@/components/RestaurantGrid';
+import { PreviousOrder } from '@/components/SmartReordering';
+import { useToast } from '@/hooks/use-toast';
+import { Restaurant } from '@/types/menu';
 
 const CustomerDashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+  const [selectedDietaryPreferences, setSelectedDietaryPreferences] = useState<string[]>([]);
+  const { toast } = useToast();
 
   const categories = ['all', 'pizza', 'burger', 'asian', 'mexican', 'healthy'];
   
-  const restaurants = [
+  const restaurants: Restaurant[] = [
     {
       id: 1,
       name: "Mario's Pizza Palace",
@@ -20,7 +25,8 @@ const CustomerDashboard = () => {
       deliveryFee: 2.99,
       cuisine: "Italian",
       category: "pizza",
-      featured: true
+      featured: true,
+      dietaryOptions: ['vegetarian', 'gluten-free']
     },
     {
       id: 2,
@@ -31,7 +37,8 @@ const CustomerDashboard = () => {
       deliveryFee: 1.99,
       cuisine: "American",
       category: "burger",
-      featured: false
+      featured: false,
+      dietaryOptions: ['gluten-free', 'dairy-free']
     },
     {
       id: 3,
@@ -42,7 +49,8 @@ const CustomerDashboard = () => {
       deliveryFee: 3.49,
       cuisine: "Chinese",
       category: "asian",
-      featured: true
+      featured: true,
+      dietaryOptions: ['vegetarian', 'vegan', 'gluten-free']
     },
     {
       id: 4,
@@ -53,7 +61,8 @@ const CustomerDashboard = () => {
       deliveryFee: 2.49,
       cuisine: "Mexican",
       category: "mexican",
-      featured: false
+      featured: false,
+      dietaryOptions: ['vegetarian', 'gluten-free', 'dairy-free']
     },
     {
       id: 5,
@@ -64,7 +73,8 @@ const CustomerDashboard = () => {
       deliveryFee: 3.99,
       cuisine: "Healthy",
       category: "healthy",
-      featured: true
+      featured: true,
+      dietaryOptions: ['vegetarian', 'vegan', 'gluten-free', 'low-calorie', 'high-protein']
     }
   ];
 
@@ -72,8 +82,17 @@ const CustomerDashboard = () => {
     const matchesSearch = restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          restaurant.cuisine.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === 'all' || restaurant.category === activeCategory;
-    return matchesSearch && matchesCategory;
+    const matchesDietaryPreferences = selectedDietaryPreferences.length === 0 || 
+                                     selectedDietaryPreferences.some(pref => restaurant.dietaryOptions.includes(pref));
+    return matchesSearch && matchesCategory && matchesDietaryPreferences;
   });
+
+  const handleReorder = (order: PreviousOrder) => {
+    toast({
+      title: "Order Added to Cart",
+      description: `${order.items.length} items from ${order.restaurantName} added to your cart.`,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -92,6 +111,9 @@ const CustomerDashboard = () => {
           activeCategory={activeCategory}
           setActiveCategory={setActiveCategory}
           categories={categories}
+          selectedDietaryPreferences={selectedDietaryPreferences}
+          onDietaryPreferencesChange={setSelectedDietaryPreferences}
+          onReorder={handleReorder}
         />
 
         <RestaurantGrid
