@@ -112,10 +112,13 @@ const RestaurantDetails = () => {
       image: "🍕", 
       description: "Fresh mozzarella, tomato sauce, and basil",
       category: "pizza",
+      status: 'active' as const,
       dietaryTags: ['vegetarian'],
       nutritionalInfo: { calories: 280, protein: 12, carbs: 35, fat: 10, fiber: 2, sodium: 590 },
       allergens: ['gluten', 'dairy'],
-      preparationTime: 15
+      preparationTime: 15,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     { 
       id: 2, 
@@ -125,10 +128,13 @@ const RestaurantDetails = () => {
       image: "🍕", 
       description: "Classic pepperoni with mozzarella cheese",
       category: "pizza",
+      status: 'active' as const,
       dietaryTags: [],
       nutritionalInfo: { calories: 320, protein: 15, carbs: 35, fat: 14, fiber: 2, sodium: 720 },
       allergens: ['gluten', 'dairy'],
-      preparationTime: 15
+      preparationTime: 15,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     { 
       id: 3, 
@@ -138,10 +144,13 @@ const RestaurantDetails = () => {
       image: "🥗", 
       description: "Fresh romaine lettuce with caesar dressing",
       category: "salad",
+      status: 'active' as const,
       dietaryTags: ['vegetarian', 'low-calorie'],
       nutritionalInfo: { calories: 150, protein: 8, carbs: 12, fat: 8, fiber: 4, sodium: 380 },
       allergens: ['dairy'],
-      preparationTime: 5
+      preparationTime: 5,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     { 
       id: 4, 
@@ -151,10 +160,13 @@ const RestaurantDetails = () => {
       image: "🍔", 
       description: "Beef patty with lettuce, tomato, and pickles",
       category: "burger",
+      status: 'active' as const,
       dietaryTags: [],
       nutritionalInfo: { calories: 450, protein: 25, carbs: 35, fat: 22, fiber: 3, sodium: 850 },
       allergens: ['gluten'],
-      preparationTime: 12
+      preparationTime: 12,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     { 
       id: 5, 
@@ -164,10 +176,13 @@ const RestaurantDetails = () => {
       image: "🍔", 
       description: "Plant-based patty with fresh vegetables",
       category: "burger",
+      status: 'active' as const,
       dietaryTags: ['vegetarian', 'vegan', 'high-protein'],
       nutritionalInfo: { calories: 380, protein: 20, carbs: 45, fat: 12, fiber: 8, sodium: 650 },
       allergens: ['gluten'],
-      preparationTime: 12
+      preparationTime: 12,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     { 
       id: 6, 
@@ -177,10 +192,13 @@ const RestaurantDetails = () => {
       image: "🍟", 
       description: "Crispy sweet potato fries with herbs",
       category: "sides",
+      status: 'active' as const,
       dietaryTags: ['vegetarian', 'vegan', 'gluten-free'],
       nutritionalInfo: { calories: 180, protein: 3, carbs: 32, fat: 6, fiber: 4, sodium: 280 },
       allergens: [],
-      preparationTime: 8
+      preparationTime: 8,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     { 
       id: 11, 
@@ -190,10 +208,13 @@ const RestaurantDetails = () => {
       image: "🥗", 
       description: "Nutritious quinoa with fresh vegetables and avocado",
       category: "bowl",
+      status: 'active' as const,
       dietaryTags: ['vegetarian', 'vegan', 'gluten-free', 'high-protein', 'low-calorie'],
       nutritionalInfo: { calories: 320, protein: 18, carbs: 42, fat: 8, fiber: 12, sodium: 420 },
       allergens: [],
-      preparationTime: 10
+      preparationTime: 10,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
     { 
       id: 12, 
@@ -203,10 +224,13 @@ const RestaurantDetails = () => {
       image: "🥤", 
       description: "Healthy smoothie with spinach, apple, and ginger",
       category: "drinks",
+      status: 'active' as const,
       dietaryTags: ['vegetarian', 'vegan', 'gluten-free', 'low-calorie'],
       nutritionalInfo: { calories: 120, protein: 4, carbs: 28, fat: 1, fiber: 6, sodium: 45 },
       allergens: [],
-      preparationTime: 3
+      preparationTime: 3,
+      createdAt: new Date(),
+      updatedAt: new Date()
     },
   ];
 

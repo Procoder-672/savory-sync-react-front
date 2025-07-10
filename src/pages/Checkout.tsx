@@ -104,7 +104,8 @@ const Checkout = () => {
     deliveryTime: 'asap',
     scheduledTime: '',
     utensils: true,
-    napkins: true
+    napkins: true,
+    specialInstructions: ''
   });
 
   const [promoCode, setPromoCode] = useState('');

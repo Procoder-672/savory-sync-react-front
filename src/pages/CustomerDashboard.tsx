@@ -26,6 +26,13 @@ const CustomerDashboard = () => {
       cuisine: "Italian",
       category: "pizza",
       featured: true,
+      address: "123 Pizza Street, Little Italy, San Francisco",
+      description: "Authentic Italian pizzas made with fresh ingredients",
+      phone: "+1 (555) PIZZA-01",
+      cuisineType: "Italian",
+      openingHours: "Mon-Sun: 11:00 AM - 11:00 PM",
+      sellerId: 1,
+      hygieneRating: 5,
       dietaryOptions: ['vegetarian', 'gluten-free']
     },
     {
@@ -38,6 +45,13 @@ const CustomerDashboard = () => {
       cuisine: "American",
       category: "burger",
       featured: false,
+      address: "456 Burger Ave, Downtown, San Francisco",
+      description: "Gourmet burgers made with locally sourced ingredients",
+      phone: "+1 (555) BURGER-2",
+      cuisineType: "American",
+      openingHours: "Mon-Sun: 10:00 AM - 12:00 AM",
+      sellerId: 2,
+      hygieneRating: 4,
       dietaryOptions: ['gluten-free', 'dairy-free']
     },
     {
@@ -50,6 +64,13 @@ const CustomerDashboard = () => {
       cuisine: "Chinese",
       category: "asian",
       featured: true,
+      address: "789 Wok Street, Chinatown, San Francisco",
+      description: "Traditional Chinese dishes with modern presentation",
+      phone: "+1 (555) DRAGON-3",
+      cuisineType: "Chinese",
+      openingHours: "Mon-Sun: 11:30 AM - 10:30 PM",
+      sellerId: 3,
+      hygieneRating: 5,
       dietaryOptions: ['vegetarian', 'vegan', 'gluten-free']
     },
     {
@@ -62,6 +83,13 @@ const CustomerDashboard = () => {
       cuisine: "Mexican",
       category: "mexican",
       featured: false,
+      address: "321 Taco Lane, Mission District, San Francisco",
+      description: "Authentic Mexican street food and traditional recipes",
+      phone: "+1 (555) TACO-45",
+      cuisineType: "Mexican",
+      openingHours: "Mon-Sun: 10:00 AM - 11:00 PM",
+      sellerId: 4,
+      hygieneRating: 4,
       dietaryOptions: ['vegetarian', 'gluten-free', 'dairy-free']
     },
     {
@@ -74,6 +102,13 @@ const CustomerDashboard = () => {
       cuisine: "Healthy",
       category: "healthy",
       featured: true,
+      address: "654 Health St, SoMa, San Francisco",
+      description: "Fresh, organic, and nutritious meals for health-conscious diners",
+      phone: "+1 (555) GREEN-99",
+      cuisineType: "Healthy",
+      openingHours: "Mon-Sun: 7:00 AM - 9:00 PM",
+      sellerId: 5,
+      hygieneRating: 5,
       dietaryOptions: ['vegetarian', 'vegan', 'gluten-free', 'low-calorie', 'high-protein']
     }
   ];

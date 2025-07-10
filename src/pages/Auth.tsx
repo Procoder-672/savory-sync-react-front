@@ -164,16 +164,45 @@ const Auth = () => {
                       required
                     />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-address">Address</Label>
+                    <Input
+                      id="signup-address"
+                      name="address"
+                      placeholder="123 Main Street, City, State, ZIP"
+                      required
+                    />
+                  </div>
                   {role === 'seller' && (
-                    <div className="space-y-2">
-                      <Label htmlFor="restaurant-name">Restaurant Name</Label>
-                      <Input
-                        id="restaurant-name"
-                        name="restaurantName"
-                        placeholder="Enter your restaurant name"
-                        required
-                      />
-                    </div>
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="restaurant-name">Restaurant Name</Label>
+                        <Input
+                          id="restaurant-name"
+                          name="restaurantName"
+                          placeholder="Enter your restaurant name"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="restaurant-address">Restaurant Address</Label>
+                        <Input
+                          id="restaurant-address"
+                          name="restaurantAddress"
+                          placeholder="Restaurant location"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cuisine-type">Cuisine Type</Label>
+                        <Input
+                          id="cuisine-type"
+                          name="cuisineType"
+                          placeholder="e.g., Italian, Chinese, Mexican"
+                          required
+                        />
+                      </div>
+                    </>
                   )}
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Password</Label>
