@@ -10,6 +10,7 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import SellerDashboard from "./pages/SellerDashboard";
 import RestaurantDetails from "./pages/RestaurantDetails";
 import Checkout from "./pages/Checkout";
+import PaymentDashboard from "./pages/PaymentDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/seller-dashboard" element={<SellerDashboard />} />
           <Route path="/restaurant/:id" element={<RestaurantDetails />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payments" element={<PaymentDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
