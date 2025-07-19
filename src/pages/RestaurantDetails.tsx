@@ -1,10 +1,11 @@
 
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ChefHat, ArrowLeft, Star, Clock, MapPin, ShoppingCart, User, LogOut, Plus, Minus, Info } from 'lucide-react';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ChefHat, ArrowLeft, Star, Clock, MapPin, ShoppingCart, User, LogOut, Plus, Minus, Info, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import SmartReordering, { PreviousOrder } from '@/components/SmartReordering';
 import { MenuItem, NutritionalInfo } from '@/types/menu';
@@ -12,9 +13,11 @@ import { dietaryOptions } from '@/components/DietaryPreferences';
 
 const RestaurantDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [cartItems, setCartItems] = useState<{ [key: number]: number }>({});
   const [showNutrition, setShowNutrition] = useState<{ [key: number]: boolean }>({});
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const handleReorder = (order: PreviousOrder) => {
     // Add all items from the previous order to cart
@@ -277,6 +280,40 @@ const RestaurantDetails = () => {
     return Object.values(cartItems).reduce((sum, count) => sum + count, 0);
   };
 
+  const getTotalPrice = () => {
+    return Object.entries(cartItems).reduce((total, [itemId, quantity]) => {
+      const item = menuItems.find(m => m.id === parseInt(itemId));
+      return total + (item ? item.price * quantity : 0);
+    }, 0);
+  };
+
+  const getCartItemsWithDetails = () => {
+    return Object.entries(cartItems).map(([itemId, quantity]) => {
+      const item = menuItems.find(m => m.id === parseInt(itemId));
+      return item ? { ...item, quantity } : null;
+    }).filter(Boolean);
+  };
+
+  const proceedToCheckout = () => {
+    if (getTotalItems() === 0) {
+      toast({
+        title: "Cart is empty",
+        description: "Please add items to your cart before proceeding to checkout.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Store cart data in localStorage for checkout page
+    localStorage.setItem('cartItems', JSON.stringify({
+      restaurantId: parseInt(id || '0'),
+      restaurantName: restaurant?.name || '',
+      items: getCartItemsWithDetails()
+    }));
+    
+    navigate('/checkout');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -296,10 +333,100 @@ const RestaurantDetails = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
-                <ShoppingCart className="h-5 w-5" />
-                <span className="ml-2">Cart ({getTotalItems()})</span>
-              </Button>
+              <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="relative">
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="ml-2">Cart ({getTotalItems()})</span>
+                    {getTotalItems() > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {getTotalItems()}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="w-[400px] sm:w-[540px]">
+                  <SheetHeader>
+                    <SheetTitle>Your Cart</SheetTitle>
+                    <SheetDescription>
+                      Review your items and proceed to checkout
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-6 space-y-4">
+                    {getTotalItems() === 0 ? (
+                      <div className="text-center py-8">
+                        <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">Your cart is empty</p>
+                        <p className="text-sm text-gray-400">Add some delicious items from the menu!</p>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="space-y-4 max-h-96 overflow-y-auto">
+                          {getCartItemsWithDetails().map((item) => (
+                            <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                              <div className="text-2xl">{item.image}</div>
+                              <div className="flex-1">
+                                <h4 className="font-medium">{item.name}</h4>
+                                <p className="text-sm text-gray-500">${item.price}</p>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => removeFromCart(item.id)}
+                                >
+                                  <Minus className="h-4 w-4" />
+                                </Button>
+                                <span className="font-medium w-8 text-center">{item.quantity}</span>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => addToCart(item.id, item.name)}
+                                >
+                                  <Plus className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setCartItems(prev => {
+                                      const newCart = { ...prev };
+                                      delete newCart[item.id];
+                                      return newCart;
+                                    });
+                                  }}
+                                  className="text-red-500 hover:text-red-700"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="border-t pt-4">
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-lg font-medium">Total:</span>
+                            <span className="text-xl font-bold text-orange-500">
+                              ${getTotalPrice().toFixed(2)}
+                            </span>
+                          </div>
+                          <Button 
+                            onClick={proceedToCheckout} 
+                            className="w-full bg-orange-500 hover:bg-orange-600"
+                            size="lg"
+                          >
+                            Proceed to Checkout
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
               <Button variant="ghost" size="sm">
                 <User className="h-5 w-5" />
                 <span className="ml-2">Profile</span>
