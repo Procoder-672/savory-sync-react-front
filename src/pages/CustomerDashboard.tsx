@@ -123,6 +123,31 @@ const CustomerDashboard = () => {
   });
 
   const handleReorder = (order: PreviousOrder) => {
+    // Store the reordered items in localStorage for the cart
+    const existingCart = localStorage.getItem('cartItems');
+    let cartData = existingCart ? JSON.parse(existingCart) : null;
+    
+    // If there's no existing cart or it's from a different restaurant, create new cart
+    if (!cartData || cartData.restaurantId !== order.restaurantId) {
+      cartData = {
+        restaurantId: order.restaurantId,
+        restaurantName: order.restaurantName,
+        items: [...order.items]
+      };
+    } else {
+      // Add items to existing cart
+      order.items.forEach(newItem => {
+        const existingItemIndex = cartData.items.findIndex((item: any) => item.id === newItem.id);
+        if (existingItemIndex >= 0) {
+          cartData.items[existingItemIndex].quantity += newItem.quantity;
+        } else {
+          cartData.items.push(newItem);
+        }
+      });
+    }
+    
+    localStorage.setItem('cartItems', JSON.stringify(cartData));
+    
     toast({
       title: "Order Added to Cart",
       description: `${order.items.length} items from ${order.restaurantName} added to your cart.`,
