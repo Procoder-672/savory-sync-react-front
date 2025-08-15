@@ -148,6 +148,9 @@ const CustomerDashboard = () => {
     
     localStorage.setItem('cartItems', JSON.stringify(cartData));
     
+    // Dispatch custom event to update cart counter
+    window.dispatchEvent(new Event('cartUpdated'));
+    
     toast({
       title: "Order Added to Cart",
       description: `${order.items.length} items from ${order.restaurantName} added to your cart.`,
