@@ -298,20 +298,21 @@ const RestaurantDetails = () => {
     if (getTotalItems() === 0) {
       toast({
         title: "Cart is empty",
-        description: "Please add items to your cart before proceeding to checkout.",
+        description: "Please add items to your cart before proceeding to payment.",
         variant: "destructive"
       });
       return;
     }
     
-    // Store cart data in localStorage for checkout page
+    // Store cart data in localStorage for payment dashboard
     localStorage.setItem('cartItems', JSON.stringify({
       restaurantId: parseInt(id || '0'),
       restaurantName: restaurant?.name || '',
-      items: getCartItemsWithDetails()
+      items: getCartItemsWithDetails(),
+      totalAmount: getTotalPrice()
     }));
     
-    navigate('/checkout');
+    navigate('/payments');
   };
 
   return (
@@ -419,7 +420,7 @@ const RestaurantDetails = () => {
                             className="w-full bg-orange-500 hover:bg-orange-600"
                             size="lg"
                           >
-                            Proceed to Checkout
+                            Proceed to Payment
                           </Button>
                         </div>
                       </>
